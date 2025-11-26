@@ -335,14 +335,17 @@ class Cap:
         If the process times out, kill it and tag the input file with ".timeout<timeout>".
         """
         CWD = os.getcwd()
+        sfboxpath = CWD+"/sfbox"
+
         os.chdir(self.PATH)
         start_time = time.time()
         print(f"{self.fname}: running\n")
+        # Resolve path to the current directory
 
         proc = None
         try:
             proc = subprocess.Popen(
-                ["sfbox", self.fnamein],
+                [sfboxpath, self.fnamein],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
