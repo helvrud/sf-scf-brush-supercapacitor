@@ -4,14 +4,13 @@ os.system("mkdir -p /run/user/$(id -u)/flow/output")
 from cap import Cap
 import matplotlib.pyplot as plt
 default_color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
-from IPython.display import display, Latex
-import pprint
-import contextlib
-import io
-from itertools import cycle
-import veusz.embed as veusz
+# from IPython.display import display, Latex
+# import pprint
+# import contextlib
+# import io
+# from itertools import cycle
 from multiprocessing import Pool, cpu_count
-import socket
+# import socket
 paramsHP = {
     'phi': 0.0,
     'N': 200,
