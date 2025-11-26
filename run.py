@@ -115,6 +115,111 @@ def getCAPS(pKs, cnas, chis, PHIs, Alphas, mp= False):
 
     return CAPSdict
 
+def plotQV(
+    CAPS,
+    label='',
+    ax=None,
+    color=None,
+    fill=False,
+    title=None,
+    xlim=None,
+    ylim=None,
+    linestyle='auto',
+):
+    """
+    Plot net stored charge Q vs. -Voltage from SCF simulation results.
+
+    Parameters
+    ----------
+    CAPS : list of Cap
+        List of SCF results.
+    label : str
+        Legend label.
+    ax : matplotlib Axes or None
+        If None, a new figure/axes is created.
+    color : str or None
+        Color for the curve.
+    fill : bool
+        Whether markers should be filled (only used for marker mode).
+    title : str or None
+        Title for the axes.
+    xlim, ylim : tuple or None
+        Axis limits.
+    linestyle : str
+        - 'auto'    → default style (line + markers)
+        - 'line'    → force line only (no markers)
+        - 'markers' → force line + circular markers
+    """
+
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from itertools import cycle
+
+    # Extract data
+    ThetaNa = [c.thetaNa_exc for c in CAPS]
+    ThetaCl = [c.thetaCl_exc for c in CAPS]
+    Theta = np.array(ThetaNa) - np.array(ThetaCl)
+
+    c0 = CAPS[0]
+    unit = c0.electron / (c0.sigma**2)   # C/m^2 per unit theta
+    Theta = Theta * unit
+
+    Voltage = np.array([c.V for c in CAPS])
+
+    # Setup axes
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6, 4))
+    else:
+        fig = ax.figure
+
+    if color is None:
+        color_cycle = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+        color = next(cycle(color_cycle))
+
+    # Marker face color
+    markerface = color if fill else 'none'
+
+    # Decide plotting style
+    if linestyle == 'line':
+        # line only
+        ax.plot(
+            -Voltage, Theta,
+            linestyle='-',
+            linewidth=2.0,
+            color=color,
+            label=label,
+        )
+    else:
+        # either 'markers' or 'auto'
+        ax.plot(
+            -Voltage, Theta,
+            marker='o',
+            markersize=6,
+            markerfacecolor=markerface,
+            color=color,
+            linestyle='-',
+            linewidth=0.8,
+            alpha=0.9,
+            label=label,
+        )
+
+    # Labels
+    ax.set_xlabel(r'$\mathrm{Surface\ potential}\ (-\psi),\ \mathrm{V}$')
+    ax.set_ylabel(r'$\mathrm{Stored\ charge}\ Q\ (\mathrm{C/m}^2)$')
+
+    # Limits
+    if xlim is not None:
+        ax.set_xlim(xlim[0], xlim[1])
+    if ylim is not None:
+        ax.set_ylim(ylim[0], ylim[1])
+
+    if title:
+        ax.set_title(title)
+
+    if label:
+        ax.legend(frameon=False)
+
+    return fig, ax
 
 def plotTV(CAPS, label='', ax=None, color=None, fill=False, title=None, xlim=None, ylim=None ):
     """
