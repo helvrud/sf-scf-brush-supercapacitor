@@ -23,3 +23,29 @@ pip install -r requirements.txt
 . venv/bin/activate
 jupyter lab notebook.ipynb
 ```
+
+# Simulation Data
+
+The main simulation dataset (`data.pkl`, ~800 MB) is archived on Zenodo
+together with the corresponding release of this repository.
+
+The dataset contains precomputed SCF solutions and post-processed
+observables used to generate the figures in the manuscript.
+
+## Access
+The data can be downloaded from Zenodo:
+DOI: 10.5281/zenodo.17913194
+
+
+## Format
+- File: `data.pkl`
+- Python pickle containing a dictionary of Cap objects grouped by
+  parameter combinations.
+
+## Notes
+- The pickle file is compatible with Python 3.11.
+- For long-term reuse, we recommend regenerating data using the scripts
+  provided in this repository.
+- The dataset is provided as a Python pickle for efficiency and
+  compactness. Users concerned with pickle security should regenerate
+  the data using the scripts provided in the repository.
